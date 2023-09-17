@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.mjs",
+    "static": "serve -p 5050 static",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
