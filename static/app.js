@@ -1,4 +1,5 @@
-// const mockData = [
+/* Mock Data */
+// const data = [
 //     {
 //         id: "A1",
 //         name: "Vacuum Cleaner",
@@ -21,14 +22,21 @@
 
 const API = 'http://localhost:3000' // <-
 
-const populateProducts = async(category) => { // <- Fastify
+const populateProducts = async(category, method='GET', payload) => { // <- mock data, server.mjs, Fastify
     const products = document.querySelector('#products')
     products.innerHTML = ''
 
-    const res = await fetch(`${API}/${category}`) // <-
-    const data = await res.json() // <-
+    /* Fastify: GET, POST */
+    const options = method === 'GET' ? {} : {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }
 
-    for (const product of data) { // <-
+    const res = await fetch(`${API}/${category}`, options) // <- server.mjs, Fastify
+    const data = await res.json() // <- server.mjs
+
+    for (const product of data) {
         const item = document.createElement('product-item')
         for (const key of ['name', 'rrp', 'info']) {
             const span = document.createElement('span')
@@ -40,11 +48,29 @@ const populateProducts = async(category) => { // <- Fastify
     }    
 }
 
-// document.querySelector('#fetch').addEventListener('click', async() => await populateProducts())
+// document.querySelector('#fetch').addEventListener('click', async() => await populateProducts()) // mock data, server.mjs
 
-/* Fastify */
-const category = document.querySelector('#category') 
-category.addEventListener('input', async(e) => await populateProducts(e.target.value))
+/* Fastify: GET */
+// const category = document.querySelector('#category')
+// category.addEventListener('input', async(e) => await populateProducts(e.target.value))
+
+/* Fastify: GET, POST */
+const category = document.querySelector('#category')
+const add = document.querySelector('#add')
+category.addEventListener('input', async(e) => {
+    await populateProducts(e.target.value)
+    add.style.display = 'block'
+})
+add.addEventListener('submit', async(e) => {
+    e.preventDefault()
+    const payload = {
+        name: e.target.name.value,
+        rrp: e.target.rrp.value,
+        info: e.target.info.value
+    }
+    await populateProducts(category.value, 'POST', payload)
+    e.target.reset()
+})
 
 customElements.define(
     'product-item', 
