@@ -21,11 +21,11 @@
 
 const API = 'http://localhost:3000' // <-
 
-const populateProducts = async() => {
+const populateProducts = async(category) => { // <- Fastify
     const products = document.querySelector('#products')
     products.innerHTML = ''
 
-    const res = await fetch(API) // <-
+    const res = await fetch(`${API}/${category}`) // <-
     const data = await res.json() // <-
 
     for (const product of data) { // <-
@@ -40,7 +40,11 @@ const populateProducts = async() => {
     }    
 }
 
-document.querySelector('#fetch').addEventListener('click', async() => await populateProducts())
+// document.querySelector('#fetch').addEventListener('click', async() => await populateProducts())
+
+/* Fastify */
+const category = document.querySelector('#category') 
+category.addEventListener('input', async(e) => await populateProducts(e.target.value))
 
 customElements.define(
     'product-item', 
