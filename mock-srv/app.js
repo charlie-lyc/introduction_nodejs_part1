@@ -1,7 +1,8 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import AutoLoad from '@fastify/autoload'
-import cors from '@fastify/cors'
+import cors from '@fastify/cors' // <- CORS
+import websocket from '@fastify/websocket' // <- realtime orders
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -11,7 +12,8 @@ export const options = {}
 
 export default async function (fastify, opts) {
   // Place here your custom code!
-  fastify.register(cors) // <-
+  fastify.register(cors) // <- CORS
+  fastify.register(websocket, {}) // <- realtime orders
 
   // Do not touch the following lines
 
